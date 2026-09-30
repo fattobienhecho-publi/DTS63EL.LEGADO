@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>El Legado - Colegio Portugal</title>
+    <meta
+      name="description"
+      content="Campaña ciudadana para mejorar el Colegio Portugal en San Nicolás Alto, Lebrija."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#inicio"><span>El Legado</span><small>Colegio Portugal</small></a>
+      <button class="ghost-button" id="adminOpen" type="button">Admin</button>
+    </header>
+
+    <main id="inicio">
+      <section class="hero">
+        <img class="hero-bg" src="assets/hero-nina-caminando.png" alt="Niña caminando hacia la escuela rural" />
+        <div class="hero-shade"></div>
+        <div class="hero-copy">
+          <p class="hero-brand">El Legado <span>Colegio Portugal</span></p>
+          <h1>Niños que caminan hasta dos horas merecen una escuela digna.</h1>
+          <p class="hero-place">San Nicolás Alto, Lebrija</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#ayudar">Donar</a>
+            <a class="button green" href="#ayudar">Comprar bono</a>
+            <a class="button gold" href="#ayudar">Sumar mi empresa</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="goal-strip" aria-label="Meta del proyecto">
+        <div class="goal-copy">
+          <span>Meta</span>
+          <strong>$30.000.000</strong>
+          <p>Más materiales, servicios y mano de obra aliada.</p>
+        </div>
+        <div class="goal-progress" aria-label="Avance de la meta">
+          <div class="goal-progress-head">
+            <span>Recaudado</span>
+            <strong id="goalPercent">0%</strong>
+          </div>
+          <div class="goal-track">
+            <div class="goal-fill" id="goalFill"></div>
+          </div>
+          <div class="goal-progress-foot">
+            <span id="goalRaised">$0</span>
+            <span id="goalRemaining">Faltan $30.000.000</span>
+          </div>
+        </div>
+        <div class="goal-counts" aria-label="Registros de apoyo">
+          <span><strong id="goalDonations">0</strong> aportes</span>
+          <span><strong id="goalBonds">0</strong> bonos</span>
+          <span><strong id="goalCompanies">0</strong> aliados</span>
+        </div>
+      </section>
+
+      <section class="section story">
+        <p class="eyebrow">Por qué importa</p>
+        <h2>Ellos ya hacen el camino. Nosotros podemos abrir más oportunidades.</h2>
+        <p>
+          El Colegio Portugal es un lugar de encuentro para niños rurales. Hoy necesita mejoras
+          concretas en espacios básicos. Cada aporte ayuda a cambiar algo real.
+        </p>
+        <img class="wide-photo" src="assets/ninos-colegio.jpeg" alt="Estudiantes reunidos en el Colegio Portugal" />
+      </section>
+
+      <section class="section transform" id="transformar">
+        <div class="section-heading">
+          <p class="eyebrow">Hoy / Con tu ayuda</p>
+          <h2>Lo que podemos transformar</h2>
+          <p>Fotos reales del colegio junto a referencias visuales del resultado esperado.</p>
+        </div>
+
+        <div class="compare-list">
+          <article class="compare-card">
+            <h3>Baños</h3>
+            <div class="compare-images">
+              <figure><span>Hoy</span><img src="assets/bano-hoy.jpeg" alt="Baño actual del Colegio Portugal" /></figure>
+              <figure><span>Con tu ayuda</span><img src="assets/bano-futuro.png" alt="Referencia de baño escolar renovado" /></figure>
+            </div>
+            <p>Baños limpios, funcionales y dignos.</p>
+          </article>
+
+          <article class="compare-card">
+            <h3>Cocina</h3>
+            <div class="compare-images">
+              <figure><span>Hoy</span><img src="assets/cocina-hoy.jpeg" alt="Cocina actual del Colegio Portugal" /></figure>
+              <figure><span>Con tu ayuda</span><img src="assets/cocina-futuro.png" alt="Referencia de cocina escolar organizada" /></figure>
+            </div>
+            <p>Un espacio más seguro para preparar alimentos.</p>
+          </article>
+
+          <article class="compare-card">
+            <h3>Salones</h3>
+            <div class="compare-images">
+              <figure><span>Hoy</span><img src="assets/salon-hoy.jpeg" alt="Salón actual del Colegio Portugal" /></figure>
+              <figure><span>Con tu ayuda</span><img src="assets/salon-futuro.png" alt="Referencia de salón escolar renovado" /></figure>
+            </div>
+            <p>Aulas más claras, seguras y llenas de vida.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section plan">
+        <p class="eyebrow">Cambios concretos</p>
+        <h2>Tu ayuda se convierte en algo visible.</h2>
+        <div class="plan-grid">
+          <div>Baños reparados</div>
+          <div>Cocina más digna</div>
+          <div>Salones seguros</div>
+          <div>Cubiertas intervenidas</div>
+          <div>Mobiliario recuperado</div>
+          <div>Más recursos educativos</div>
+        </div>
+      </section>
+
+      <section class="section help" id="ayudar">
+        <div class="section-heading">
+          <p class="eyebrow">Participa</p>
+          <h2>Elige cómo dejar tu huella</h2>
+          <p>Tu información se revisa de forma privada para confirmar el aporte.</p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Formas de ayudar">
+          <button class="tab active" type="button" data-tab="donacion">Donar</button>
+          <button class="tab" type="button" data-tab="bono">Bono</button>
+          <button class="tab" type="button" data-tab="empresa">Empresa</button>
+        </div>
+
+        <div class="forms-shell">
+          <section class="form-panel active" id="donacion">
+            <div class="pay-box">
+              <h3>Aporte libre</h3>
+              <p>
+                Puedes donar el valor que quieras. Todo suma: una baldosa, una llave, una silla
+                reparada, un salón más seguro.
+              </p>
+              <div class="amount-grid" aria-label="Valores sugeridos">
+                <button type="button" class="amount-chip" data-amount="20000">$20.000</button>
+                <button type="button" class="amount-chip" data-amount="30000">$30.000</button>
+                <button type="button" class="amount-chip" data-amount="50000">$50.000</button>
+                <button type="button" class="amount-chip" data-amount="100000">$100.000</button>
+              </div>
+              <ol class="steps">
+                <li>Elige el valor de tu aporte.</li>
+                <li>Realiza la transferencia con el QR o la cuenta.</li>
+                <li>Sube el comprobante y deja tu WhatsApp.</li>
+              </ol>
+              <div class="payment-placeholder">
+                <strong>Datos de pago por confirmar</strong>
+                <span>Aquí irán número de cuenta, QR y WhatsApp oficial.</span>
+              </div>
+            </div>
+            <form data-kind="donaciones">
+              <label>Nombre<input name="nombre" required autocomplete="name" /></label>
+              <label>WhatsApp<input name="whatsapp" required inputmode="tel" /></label>
+              <label>Valor aportado<input name="valor" required inputmode="numeric" placeholder="$" /></label>
+              <label>Medio de pago<input name="medio" required placeholder="Transferencia, QR, efectivo..." /></label>
+              <label>Comprobante<input name="comprobante" type="file" accept="image/*,.pdf" required /></label>
+              <label>Mensaje opcional<textarea name="mensaje" rows="3"></textarea></label>
+              <button class="button primary" type="submit">Enviar aporte</button>
+            </form>
+          </section>
+
+          <section class="form-panel" id="bono">
+            <div class="pay-box">
+              <h3>Bono solidario</h3>
+              <div class="price-card">
+                <span>Valor del bono</span>
+                <strong>$50.000</strong>
+              </div>
+              <p>
+                Con tu bono ayudas al Colegio Portugal y participas con un número de 4 cifras en
+                los sorteos de la Lotería de Boyacá.
+              </p>
+              <h4>Premios del bono</h4>
+              <div class="prize-cards">
+                <article>
+                  <span>Premio mayor · 31 de octubre</span>
+                  <strong>Viaje a San Andrés</strong>
+                  <p>4 días y 3 noches para 2 personas, todo incluido.</p>
+                </article>
+                <article>
+                  <span>1er premio · 17 de octubre</span>
+                  <strong>Noche romántica</strong>
+                  <p>Cena y experiencia para 2 personas.</p>
+                </article>
+                <article>
+                  <span>2do premio · 24 de octubre</span>
+                  <strong>Spa para 2 personas</strong>
+                  <p>Un espacio para relajarse y disfrutar.</p>
+                </article>
+              </div>
+              <h4>Cómo participar</h4>
+              <ol class="steps">
+                <li>Elige tu número de 4 cifras.</li>
+                <li>Realiza el pago del bono.</li>
+                <li>Sube el comprobante para registrar tu participación.</li>
+              </ol>
+              <p class="small-note">Boleta sin cancelar no juega.</p>
+            </div>
+            <form data-kind="bonos">
+              <label>Nombre<input name="nombre" required autocomplete="name" /></label>
+              <label>Cédula<input name="cedula" required inputmode="numeric" /></label>
+              <label>WhatsApp<input name="whatsapp" required inputmode="tel" /></label>
+              <label>Número de 4 cifras<input name="numero" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" /></label>
+              <label>Comprobante<input name="comprobante" type="file" accept="image/*,.pdf" required /></label>
+              <button class="button primary" type="submit">Comprar bono</button>
+            </form>
+          </section>
+
+          <section class="form-panel" id="empresa">
+            <div class="pay-box">
+              <h3>Empresa aliada</h3>
+              <p>
+                Tu empresa puede convertirse en parte visible de esta transformación. No solo con
+                dinero: también con materiales, transporte, servicios, tecnología o mano de obra.
+              </p>
+              <div class="ally-grid">
+                <article>
+                  <span>Recursos</span>
+                  <strong>Materiales y dotación</strong>
+                  <p>Pintura, cemento, baños, iluminación, muebles, útiles o equipos.</p>
+                </article>
+                <article>
+                  <span>Servicios</span>
+                  <strong>Manos expertas</strong>
+                  <p>Instalación, reparación, transporte, diseño, tecnología o mantenimiento.</p>
+                </article>
+                <article>
+                  <span>Impacto</span>
+                  <strong>Una mejora concreta</strong>
+                  <p>Tu aporte se vincula a una necesidad real del colegio y se registra con evidencia.</p>
+                </article>
+              </div>
+              <h4>Cómo se suma una empresa</h4>
+              <ol class="steps">
+                <li>Cuéntanos qué puedes aportar.</li>
+                <li>Coordinamos la entrega o el servicio con el equipo del proyecto.</li>
+                <li>Compartimos evidencia del avance y reconocimiento con tu autorización.</li>
+              </ol>
+              <p class="small-note">También podemos construir una alianza a la medida si tienes una idea distinta.</p>
+            </div>
+            <form data-kind="empresas">
+              <label>Empresa<input name="empresa" required /></label>
+              <label>Persona de contacto<input name="contacto" required /></label>
+              <label>WhatsApp<input name="whatsapp" required inputmode="tel" /></label>
+              <label>¿Qué desea aportar?<input name="aporte" required placeholder="Materiales, servicios, transporte..." /></label>
+              <label>Cantidad o descripción<textarea name="descripcion" rows="3" required></textarea></label>
+              <label>Mensaje opcional<textarea name="mensaje" rows="3"></textarea></label>
+              <button class="button primary" type="submit">Quiero ser aliado</button>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section class="section trust">
+        <p class="eyebrow">Transparencia</p>
+        <h2>Confianza con hechos</h2>
+        <div class="trust-grid">
+          <div><strong>Registros privados</strong><span>Para revisar cada aporte.</span></div>
+          <div><strong>Evidencia</strong><span>Fotos de entregas y avances.</span></div>
+          <div><strong>Aliados</strong><span>Reconocimiento con autorización.</span></div>
+          <div><strong>Cierre</strong><span>Resultados visibles para todos.</span></div>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <h2>Que esta escuela sienta que no está sola.</h2>
+        <p>Cada aporte puede convertirse en un espacio más digno para aprender.</p>
+        <a class="button light" href="#ayudar">Quiero participar</a>
+      </section>
+    </main>
+
+    <dialog id="adminDialog" class="admin-dialog">
+      <div class="admin-login" id="adminLogin">
+        <button class="close" type="button" data-close>&times;</button>
+        <h2>Panel privado</h2>
+        <p>Ingresa la contraseña para revisar registros y exportar datos.</p>
+        <label>Contraseña<input id="adminPassword" type="password" /></label>
+        <button class="button primary" id="adminEnter" type="button">Entrar</button>
+      </div>
+      <div class="admin-panel" id="adminPanel" hidden>
+        <button class="close" type="button" data-close>&times;</button>
+        <h2>Registros</h2>
+        <p class="admin-note">Versión local de prueba. Al publicar, estos registros deben conectarse a almacenamiento privado.</p>
+        <div class="admin-actions">
+          <button class="button green" data-export="donaciones">Exportar donaciones CSV</button>
+          <button class="button green" data-export="bonos">Exportar bonos CSV</button>
+          <button class="button green" data-export="empresas">Exportar empresas CSV</button>
+        </div>
+        <div id="adminTables"></div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
