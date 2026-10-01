@@ -182,6 +182,31 @@ h3 {
   font-weight: 600;
 }
 
+.hero-organizer {
+  position: absolute;
+  top: 22px;
+  right: 18px;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  padding: 7px 8px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(7, 22, 36, 0.34);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-organizer img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: var(--gold);
@@ -367,7 +392,8 @@ h3 {
 .story,
 .section-heading,
 .plan,
-.trust {
+.trust,
+.evidence {
   max-width: 1080px;
   margin: 0 auto;
 }
@@ -386,6 +412,36 @@ h3 {
   font-size: 1.08rem;
 }
 
+.ally-logos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.ally-logos img {
+  width: 100%;
+  max-height: 54px;
+  object-fit: contain;
+}
+
+.ally-logos img:nth-child(2) {
+  max-height: 64px;
+}
+
+.trust-allies .ally-logos {
+  max-width: 430px;
+}
+
+.trust-allies .ally-logos img {
+  display: grid;
+  min-height: 74px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+}
+
 .wide-photo {
   width: 100%;
   max-height: 520px;
@@ -393,6 +449,48 @@ h3 {
   border-radius: 14px;
   object-fit: cover;
   box-shadow: var(--shadow);
+}
+
+.evidence {
+  display: grid;
+  gap: 22px;
+  align-items: center;
+}
+
+.evidence p {
+  max-width: 620px;
+  color: var(--muted);
+}
+
+.evidence figure {
+  box-shadow: var(--shadow);
+}
+
+.evidence-media {
+  display: grid;
+  gap: 14px;
+}
+
+.evidence img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+}
+
+.evidence video {
+  width: min(100%, 340px);
+  aspect-ratio: 9 / 16;
+  justify-self: center;
+  border-radius: 18px;
+  background: var(--blue);
+  box-shadow: var(--shadow);
+}
+
+.evidence figcaption {
+  padding: 10px 12px;
+  color: var(--muted);
+  background: var(--cream);
+  font-size: 0.9rem;
 }
 
 .compare-list {
@@ -469,6 +567,18 @@ figure img {
   font-weight: 500;
 }
 
+.trust-logo {
+  align-items: center;
+  grid-template-columns: 58px 1fr;
+}
+
+.trust-logo img {
+  grid-row: span 2;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
 .help {
   max-width: 1080px;
   margin: 0 auto;
@@ -512,10 +622,6 @@ figure img {
 
 .form-panel.active {
   display: grid;
-}
-
-#bono.form-panel {
-  grid-template-columns: 1fr;
 }
 
 .pay-box {
@@ -651,6 +757,43 @@ h4 {
   margin: 0;
   padding-left: 18px;
   color: var(--muted);
+}
+
+.bond-preview {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(15, 51, 79, 0.12);
+  border-radius: 16px;
+  background: var(--cream);
+  box-shadow: 0 16px 35px rgba(22, 35, 49, 0.1);
+}
+
+.bond-preview[hidden] {
+  display: none;
+}
+
+.bond-preview h3 {
+  margin: 0;
+  color: var(--blue);
+}
+
+.bond-preview p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.bond-preview img {
+  width: min(100%, 520px);
+  justify-self: center;
+  border-radius: 12px;
+  box-shadow: 0 16px 32px rgba(22, 35, 49, 0.16);
+}
+
+.bond-preview .button {
+  justify-self: center;
+  width: min(100%, 280px);
 }
 
 .prize-cards {
@@ -892,14 +1035,28 @@ th {
     grid-template-columns: 0.88fr 1.12fr;
   }
 
-  #bono.form-panel {
-    grid-template-columns: 1fr;
-  }
-
   .compare-images,
   .plan-grid,
+  .ally-logos,
   .trust-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .evidence {
+    grid-template-columns: 0.82fr 1.18fr;
+  }
+
+  .evidence-media {
+    grid-template-columns: 1.35fr 0.82fr 0.82fr;
+    align-items: stretch;
+  }
+
+  .evidence-media figure {
+    min-height: 100%;
+  }
+
+  .evidence-media video {
+    width: 100%;
   }
 
   .amount-grid {

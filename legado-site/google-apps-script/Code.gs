@@ -10,7 +10,7 @@ const SHEETS = {
   },
   bonos: {
     name: "Bonos",
-    headers: ["Fecha", "Nombre", "Cedula", "WhatsApp", "Numero", "Comprobante"],
+    headers: ["Fecha", "Nombre", "Cedula", "WhatsApp", "Vendedor", "Numero", "Comprobante"],
   },
   empresas: {
     name: "Empresas",
@@ -67,6 +67,7 @@ function appendRecord(kind, record, receiptUrl) {
       record.nombre || "",
       record.cedula || "",
       record.whatsapp || "",
+      record.vendedor || "",
       record.numero || "",
       receiptUrl || "",
     ]);
@@ -122,12 +123,10 @@ function ensureSheet(kind) {
 
   const range = sheet.getRange(1, 1, 1, config.headers.length);
   const current = range.getValues()[0];
-  const hasHeaders = current.some(Boolean);
-  if (!hasHeaders) {
-    range.setValues([config.headers]);
-    range.setFontWeight("bold");
-    sheet.setFrozenRows(1);
-  }
+  const hasExpectedHeaders = config.headers.every((header, index) => current[index] === header);
+  if (!hasExpectedHeaders) range.setValues([config.headers]);
+  range.setFontWeight("bold");
+  sheet.setFrozenRows(1);
   return sheet;
 }
 

@@ -21,6 +21,10 @@
         <div class="hero-shade"></div>
         <div class="hero-copy">
           <p class="hero-brand">El Legado <span>Colegio Portugal</span></p>
+          <div class="hero-organizer">
+            <span>Organiza</span>
+            <img src="assets/logo-dts-63.png" alt="Logo DTS 63" />
+          </div>
           <h1>Niños que caminan hasta dos horas merecen una escuela digna.</h1>
           <p class="hero-place">San Nicolás Alto, Lebrija</p>
           <div class="hero-actions">
@@ -201,19 +205,36 @@
               <h4>Cómo participar</h4>
               <ol class="steps">
                 <li>Elige tu número de 4 cifras.</li>
-                <li>Realiza el pago del bono.</li>
+                <li>Realiza el pago del bono con el QR o la llave Bre-B.</li>
                 <li>Sube el comprobante para registrar tu participación.</li>
               </ol>
+              <div class="payment-card">
+                <img src="assets/qr-bre-b-bancolombia.jpeg" alt="QR Bre-B Bancolombia para comprar el bono solidario" />
+                <div class="payment-details">
+                  <span>Pago por Bre-B Bancolombia</span>
+                  <strong>Llave: @pineda3041</strong>
+                  <p>Oscar Steven Pineda Reina · CC 1098813041</p>
+                </div>
+              </div>
               <p class="small-note">Boleta sin cancelar no juega.</p>
             </div>
             <form data-kind="bonos">
               <label>Nombre<input name="nombre" required autocomplete="name" /></label>
               <label>Cédula<input name="cedula" required inputmode="numeric" /></label>
               <label>WhatsApp<input name="whatsapp" required inputmode="tel" /></label>
+              <label>¿Quién te vendió el bono?<input name="vendedor" placeholder="Nombre de la persona que te refirió" /></label>
               <label>Número de 4 cifras<input name="numero" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" /></label>
               <label>Comprobante<input name="comprobante" type="file" accept="image/*,.pdf" required /></label>
               <button class="button primary" type="submit">Comprar bono</button>
             </form>
+            <div class="bond-preview" id="bondPreview" hidden>
+              <div>
+                <h3>Tu bono solidario</h3>
+                <p>Esta es la vista previa con el número elegido.</p>
+              </div>
+              <img id="bondPreviewImage" alt="Bono solidario generado con el número elegido" />
+              <a class="button green" id="bondDownload" download="bono-solidario.png">Descargar bono</a>
+            </div>
           </section>
 
           <section class="form-panel" id="empresa">
@@ -265,10 +286,37 @@
         <p class="eyebrow">Transparencia</p>
         <h2>Confianza con hechos</h2>
         <div class="trust-grid">
+          <div class="trust-logo"><img src="assets/logo-dts-63.png" alt="Logo DTS 63" /><strong>Organiza DTS 63</strong><span>Grupo aliado de esta actividad solidaria.</span></div>
           <div><strong>Registros privados</strong><span>Para revisar cada aporte.</span></div>
           <div><strong>Evidencia</strong><span>Fotos de entregas y avances.</span></div>
-          <div><strong>Aliados</strong><span>Reconocimiento con autorización.</span></div>
+          <div class="trust-allies" id="aliados">
+            <strong>Aliados</strong>
+            <span>Reconocimiento con autorización.</span>
+            <div class="ally-logos" aria-label="Aliados de la campaña">
+              <img src="assets/aliado-fatto-bien-hecho.png" alt="Fatto Bien Hecho" />
+              <img src="assets/aliado-ulider.png" alt="Ulider" />
+            </div>
+          </div>
           <div><strong>Cierre</strong><span>Resultados visibles para todos.</span></div>
+        </div>
+      </section>
+
+      <section class="section evidence">
+        <div>
+          <p class="eyebrow">Hechos que ya hablan</p>
+          <h2>Ayudar también es una historia que se demuestra.</h2>
+          <p>
+            El grupo organizador ya ha participado en jornadas de apoyo comunitario. Esta experiencia
+            suma confianza a cada aporte.
+          </p>
+        </div>
+        <div class="evidence-media">
+          <figure>
+            <img src="assets/grupo-dts-ayuda.jpeg" alt="Grupo DTS 63 en una jornada de ayuda comunitaria" />
+            <figcaption>Jornada solidaria de DTS 63 con entrega de ayudas.</figcaption>
+          </figure>
+          <video controls playsinline preload="metadata" src="assets/voz-ayuda-1.mp4"></video>
+          <video controls playsinline preload="metadata" src="assets/voz-ayuda-2.mp4"></video>
         </div>
       </section>
 
