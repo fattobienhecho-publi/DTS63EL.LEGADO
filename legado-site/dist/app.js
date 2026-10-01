@@ -1,4 +1,4 @@
-const SHEET_ENDPOINT = "PENDIENTE_URL_APPS_SCRIPT";
+const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycby3AvY4-ssIdpZfTOs7Vv18anyCUC4jhq8co9pfrnjlb7zePZiSC6vMglecPX1Dopro/exec";
 const goalAmount = 30000000;
 const maxReceiptSize = 4 * 1024 * 1024;
 

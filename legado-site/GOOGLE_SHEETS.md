@@ -21,6 +21,6 @@ La pagina envia los formularios a un Google Apps Script. Ese script guarda:
 8. Quien tiene acceso: `Cualquier usuario`.
 9. Autoriza los permisos.
 10. Copia la URL de la aplicacion web y pegala en `legado-site/dist/app.js`,
-    reemplazando `PENDIENTE_URL_APPS_SCRIPT`.
+    en la constante `SHEET_ENDPOINT`.
 
 Despues de reemplazar la URL, los formularios quedan conectados y la barra de meta lee el avance desde la hoja.
