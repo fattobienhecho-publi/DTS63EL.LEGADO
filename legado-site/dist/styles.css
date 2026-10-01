@@ -602,6 +602,49 @@ h4 {
   background: rgba(255, 253, 247, 0.72);
 }
 
+.payment-card {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(15, 51, 79, 0.12);
+  border-radius: 14px;
+  color: var(--blue);
+  background: rgba(255, 253, 247, 0.9);
+}
+
+.payment-card img {
+  width: min(100%, 250px);
+  justify-self: center;
+  border-radius: 10px;
+  background: white;
+}
+
+.payment-details {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+}
+
+.payment-details span {
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.payment-details strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.42rem;
+  line-height: 1.1;
+}
+
+.payment-details p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .prize-list {
   display: grid;
   gap: 8px;
