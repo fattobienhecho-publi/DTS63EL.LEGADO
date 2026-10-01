@@ -162,6 +162,56 @@ function setupStoryCarousel() {
   start();
 }
 
+function setupMediaModal() {
+  const modal = $("#mediaModal");
+  const body = $("#mediaModalBody");
+  const close = $(".media-close", modal);
+  if (!modal || !body || !close) return;
+
+  function closeModal() {
+    modal.hidden = true;
+    body.innerHTML = "";
+    document.body.classList.remove("modal-open");
+  }
+
+  $$(".media-open").forEach((button) => {
+    button.addEventListener("click", () => {
+      const type = button.dataset.mediaType;
+      const src = button.dataset.mediaSrc;
+      const label = button.dataset.mediaLabel || "Evidencia ampliada";
+      if (!src) return;
+
+      $$("video").forEach((video) => video.pause());
+      const media =
+        type === "video"
+          ? document.createElement("video")
+          : document.createElement("img");
+      media.src = src;
+      media.setAttribute("aria-label", label);
+      if (type === "video") {
+        media.controls = true;
+        media.playsInline = true;
+        media.autoplay = true;
+      } else {
+        media.alt = label;
+      }
+
+      body.replaceChildren(media);
+      modal.hidden = false;
+      document.body.classList.add("modal-open");
+      close.focus();
+    });
+  });
+
+  close.addEventListener("click", closeModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !modal.hidden) closeModal();
+  });
+}
+
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -317,6 +367,7 @@ function updateGoalProgress(progress) {
 
 setupTabs();
 setupStoryCarousel();
+setupMediaModal();
 setupForms();
 window.elLegadoPreview = { generateBondImage, showBondPreview };
 loadGoalProgress();

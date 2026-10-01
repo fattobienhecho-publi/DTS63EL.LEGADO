@@ -8,7 +8,7 @@
       name="description"
       content="Campaña ciudadana para mejorar el Colegio Portugal en San Nicolás Alto, Lebrija."
     />
-    <link rel="stylesheet" href="styles.css?v=20261001-2" />
+    <link rel="stylesheet" href="styles.css?v=20261001-3" />
   </head>
   <body>
     <header class="topbar">
@@ -328,10 +328,17 @@
         <div class="evidence-media">
           <figure>
             <img src="assets/grupo-dts-ayuda.jpeg" alt="Grupo DTS 63 en una jornada de ayuda comunitaria" />
+            <button class="media-open" type="button" data-media-type="image" data-media-src="assets/grupo-dts-ayuda.jpeg" data-media-label="Jornada solidaria de DTS 63 con entrega de ayudas.">Ver grande</button>
             <figcaption>Jornada solidaria de DTS 63 con entrega de ayudas.</figcaption>
           </figure>
-          <video controls playsinline preload="metadata" src="assets/voz-ayuda-1.mp4"></video>
-          <video controls playsinline preload="metadata" src="assets/voz-ayuda-2.mp4"></video>
+          <div class="video-card">
+            <video controls playsinline preload="metadata" src="assets/voz-ayuda-1.mp4"></video>
+            <button class="media-open" type="button" data-media-type="video" data-media-src="assets/voz-ayuda-1.mp4" data-media-label="Video de jornada solidaria DTS 63">Ver grande</button>
+          </div>
+          <div class="video-card">
+            <video controls playsinline preload="metadata" src="assets/voz-ayuda-2.mp4"></video>
+            <button class="media-open" type="button" data-media-type="video" data-media-src="assets/voz-ayuda-2.mp4" data-media-label="Video de entrega de ayudas DTS 63">Ver grande</button>
+          </div>
         </div>
       </section>
 
@@ -343,6 +350,10 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=20261001-2"></script>
+    <div class="media-modal" id="mediaModal" hidden aria-modal="true" role="dialog" aria-label="Vista ampliada">
+      <button class="media-close" type="button" aria-label="Cerrar vista ampliada">Cerrar</button>
+      <div class="media-modal-body" id="mediaModalBody"></div>
+    </div>
+    <script src="app.js?v=20261001-3"></script>
   </body>
 </html>
