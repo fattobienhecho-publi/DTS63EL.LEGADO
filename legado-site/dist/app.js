@@ -2,6 +2,7 @@ const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycby3AvY4-ssIdpZfT
 const bondTemplateSrc = "assets/bono-solidario-template.png";
 const goalAmount = 30000000;
 const maxReceiptSize = 4 * 1024 * 1024;
+let latestProgress = null;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -23,6 +24,10 @@ function toast(message) {
   node.textContent = message;
   node.classList.add("show");
   window.setTimeout(() => node.classList.remove("show"), 4600);
+}
+
+function wait(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
 function fileToRecord(file) {
@@ -105,13 +110,15 @@ function setupForms() {
 
         const file = $("input[type='file']", form)?.files?.[0];
         const comprobante = await fileToRecord(file);
+        const before = latestProgress;
         await sendToSheet({ kind, record, comprobante });
         if (kind === "bonos") {
           await showBondPreview(record);
         }
+        await wait(2600);
+        const confirmed = await refreshProgressAfterSubmit(kind, before);
         form.reset();
-        toast(kind === "bonos" ? "Registro enviado. Tu bono quedó listo." : "Registro enviado. Gracias por dejar huella.");
-        window.setTimeout(loadGoalProgress, 1800);
+        toast(confirmed ? "Registro confirmado. La meta ya se actualizó." : "Registro enviado, pero aún no aparece en la meta. Revisa el Google Sheet o el Apps Script.");
       } catch (error) {
         const message =
           error.message === "receipt-too-large"
@@ -296,6 +303,20 @@ function sendToSheet(payload) {
   });
 }
 
+async function refreshProgressAfterSubmit(kind, before) {
+  try {
+    const progress = await loadSummaryFromSheet();
+    updateGoalProgress(progress || fallbackProgress());
+    if (!before || !progress) return true;
+    if (kind === "bonos") return Number(progress.bonds || 0) > Number(before.bonds || 0);
+    if (kind === "donaciones") return Number(progress.raised || 0) > Number(before.raised || 0);
+    if (kind === "empresas") return Number(progress.companies || 0) > Number(before.companies || 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function loadSummaryFromSheet() {
   if (!endpointReady()) return Promise.resolve(null);
 
@@ -348,6 +369,7 @@ async function loadGoalProgress() {
 }
 
 function updateGoalProgress(progress) {
+  latestProgress = progress;
   const raised = Number(progress.raised || 0);
   const percent = Math.min(100, Math.round(Number(progress.percent || 0)));
   const remaining = Math.max(Number(progress.remaining ?? goalAmount - raised), 0);
