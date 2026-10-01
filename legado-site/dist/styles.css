@@ -450,28 +450,27 @@ h3 {
 .story-slides {
   position: relative;
   overflow: hidden;
+  aspect-ratio: 16 / 8.1;
+  max-height: 520px;
   border-radius: 14px;
   box-shadow: var(--shadow);
 }
 
 .story-slide {
-  display: block;
-  width: 100%;
-  max-height: 520px;
-  aspect-ratio: 16 / 8.1;
-  object-fit: cover;
-  transition: opacity 520ms ease;
-}
-
-.story-slide:not(.is-active) {
   position: absolute;
   inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 520ms ease;
 }
 
 .story-slide.is-active {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .story-dots {
