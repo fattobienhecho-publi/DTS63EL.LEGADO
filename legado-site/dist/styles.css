@@ -442,6 +442,65 @@ h3 {
   background: var(--white);
 }
 
+.story-carousel {
+  position: relative;
+  margin-top: 24px;
+}
+
+.story-slides {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.story-slide {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  aspect-ratio: 16 / 8.1;
+  object-fit: cover;
+  transition: opacity 520ms ease;
+}
+
+.story-slide:not(.is-active) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.story-slide.is-active {
+  opacity: 1;
+}
+
+.story-dots {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  display: flex;
+  gap: 7px;
+  padding: 7px;
+  border-radius: 999px;
+  background: rgba(7, 22, 36, 0.38);
+  backdrop-filter: blur(8px);
+}
+
+.story-dots button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  cursor: pointer;
+}
+
+.story-dots button.is-active {
+  width: 24px;
+  background: var(--gold);
+}
+
 .wide-photo {
   width: 100%;
   max-height: 520px;

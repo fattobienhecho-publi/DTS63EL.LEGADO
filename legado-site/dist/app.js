@@ -126,6 +126,42 @@ function setupForms() {
   });
 }
 
+function setupStoryCarousel() {
+  const carousel = $(".story-carousel");
+  if (!carousel) return;
+
+  const slides = $$(".story-slide", carousel);
+  const dots = $$(".story-dots button", carousel);
+  if (!slides.length || !dots.length) return;
+
+  let current = 0;
+  let timer;
+
+  function showSlide(index) {
+    current = (index + slides.length) % slides.length;
+    slides.forEach((slide, slideIndex) => {
+      slide.classList.toggle("is-active", slideIndex === current);
+    });
+    dots.forEach((dot, dotIndex) => {
+      dot.classList.toggle("is-active", dotIndex === current);
+    });
+  }
+
+  function start() {
+    window.clearInterval(timer);
+    timer = window.setInterval(() => showSlide(current + 1), 4200);
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      showSlide(Number(dot.dataset.slide || 0));
+      start();
+    });
+  });
+
+  start();
+}
+
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -280,6 +316,7 @@ function updateGoalProgress(progress) {
 }
 
 setupTabs();
+setupStoryCarousel();
 setupForms();
 window.elLegadoPreview = { generateBondImage, showBondPreview };
 loadGoalProgress();
