@@ -1,27 +1,12 @@
-const PASSWORD = "dts63lebrija";
-const storeKey = "el-legado-registros";
-const emptyStore = { donaciones: [], bonos: [], empresas: [] };
+const SHEET_ENDPOINT = "PENDIENTE_URL_APPS_SCRIPT";
 const goalAmount = 30000000;
-const bondAmount = 50000;
+const maxReceiptSize = 4 * 1024 * 1024;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-function getStore() {
-  try {
-    return { ...emptyStore, ...JSON.parse(localStorage.getItem(storeKey)) };
-  } catch {
-    return { ...emptyStore };
-  }
-}
-
-function setStore(data) {
-  localStorage.setItem(storeKey, JSON.stringify(data));
-}
-
-function parseMoney(value) {
-  const digits = String(value || "").replace(/[^\d]/g, "");
-  return Number(digits || 0);
+function endpointReady() {
+  return /^https:\/\/script\.google\.com\/macros\/s\//.test(SHEET_ENDPOINT);
 }
 
 function money(value) {
@@ -36,18 +21,15 @@ function toast(message) {
   const node = $("#toast");
   node.textContent = message;
   node.classList.add("show");
-  window.setTimeout(() => node.classList.remove("show"), 4200);
-}
-
-function formatDate(date = new Date()) {
-  return new Intl.DateTimeFormat("es-CO", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(date);
+  window.setTimeout(() => node.classList.remove("show"), 4600);
 }
 
 function fileToRecord(file) {
-  if (!file) return Promise.resolve("");
+  if (!file) return Promise.resolve(null);
+  if (file.size > maxReceiptSize) {
+    throw new Error("receipt-too-large");
+  }
+
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () =>
@@ -64,12 +46,18 @@ function fileToRecord(file) {
 
 function normalizeForm(form) {
   const formData = new FormData(form);
-  const record = { fecha: formatDate() };
+  const record = {};
   for (const [key, value] of formData.entries()) {
     if (value instanceof File) continue;
     record[key] = String(value).trim();
   }
   return record;
+}
+
+function submitLabel(kind) {
+  if (kind === "donaciones") return "Enviar aporte";
+  if (kind === "bonos") return "Comprar bono";
+  return "Quiero ser aliado";
 }
 
 function setupTabs() {
@@ -100,200 +88,119 @@ function setupForms() {
       const kind = form.dataset.kind;
       const submit = $("button[type='submit']", form);
       submit.disabled = true;
-      submit.textContent = "Guardando...";
+      submit.textContent = "Enviando...";
+
       try {
+        if (!endpointReady()) {
+          toast("Falta conectar la página con Google Sheets. Envíame la URL del Apps Script.");
+          return;
+        }
+
         const record = normalizeForm(form);
         if (kind === "bonos" && !/^\d{4}$/.test(record.numero || "")) {
           toast("El número del bono debe tener exactamente 4 cifras.");
           return;
         }
+
         const file = $("input[type='file']", form)?.files?.[0];
-        record.comprobante = await fileToRecord(file);
-        const data = getStore();
-        data[kind].unshift(record);
-        setStore(data);
-        updateGoalProgress();
+        const comprobante = await fileToRecord(file);
+        await sendToSheet({ kind, record, comprobante });
         form.reset();
-        toast("Registro guardado. Gracias por dejar huella.");
+        toast("Registro enviado. Gracias por dejar huella.");
+        window.setTimeout(loadGoalProgress, 1800);
       } catch (error) {
-        toast("No se pudo guardar el registro. Inténtalo de nuevo.");
+        const message =
+          error.message === "receipt-too-large"
+            ? "El comprobante pesa demasiado. Usa una imagen o PDF menor a 4 MB."
+            : "No se pudo enviar el registro. Inténtalo de nuevo.";
+        toast(message);
       } finally {
         submit.disabled = false;
-        submit.textContent =
-          kind === "donaciones" ? "Enviar aporte" : kind === "bonos" ? "Comprar bono" : "Quiero ser aliado";
+        submit.textContent = submitLabel(kind);
       }
     });
   });
 }
 
-function calculateGoal() {
-  const data = getStore();
-  const donations = data.donaciones || [];
-  const bonds = data.bonos || [];
-  const companies = data.empresas || [];
-  const donationTotal = donations.reduce((sum, record) => sum + parseMoney(record.valor), 0);
-  const bondTotal = bonds.length * bondAmount;
-  const raised = donationTotal + bondTotal;
-  const percent = Math.min(100, Math.round((raised / goalAmount) * 100));
+function sendToSheet(payload) {
+  return fetch(SHEET_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+  });
+}
 
+function loadSummaryFromSheet() {
+  if (!endpointReady()) return Promise.resolve(null);
+
+  return new Promise((resolve, reject) => {
+    const callback = `elLegadoSummary${Date.now()}`;
+    const script = document.createElement("script");
+    const timer = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("summary-timeout"));
+    }, 8000);
+
+    function cleanup() {
+      window.clearTimeout(timer);
+      delete window[callback];
+      script.remove();
+    }
+
+    window[callback] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("summary-error"));
+    };
+    script.src = `${SHEET_ENDPOINT}?action=summary&callback=${callback}`;
+    document.body.appendChild(script);
+  });
+}
+
+function fallbackProgress() {
   return {
-    raised,
-    percent,
-    remaining: Math.max(goalAmount - raised, 0),
-    donations: donations.length,
-    bonds: bonds.length,
-    companies: companies.length,
+    raised: 0,
+    percent: 0,
+    remaining: goalAmount,
+    donations: 0,
+    bonds: 0,
+    companies: 0,
   };
 }
 
-function updateGoalProgress() {
-  const progress = calculateGoal();
+async function loadGoalProgress() {
+  try {
+    const progress = await loadSummaryFromSheet();
+    updateGoalProgress(progress || fallbackProgress());
+  } catch {
+    updateGoalProgress(fallbackProgress());
+  }
+}
+
+function updateGoalProgress(progress) {
+  const raised = Number(progress.raised || 0);
+  const percent = Math.min(100, Math.round(Number(progress.percent || 0)));
+  const remaining = Math.max(Number(progress.remaining ?? goalAmount - raised), 0);
   const fill = $("#goalFill");
   if (!fill) return;
 
-  $("#goalRaised").textContent = money(progress.raised);
-  $("#goalRemaining").textContent = progress.remaining
-    ? `Faltan ${money(progress.remaining)}`
-    : "Meta cumplida";
-  $("#goalPercent").textContent = `${progress.percent}%`;
-  $("#goalDonations").textContent = progress.donations;
-  $("#goalBonds").textContent = progress.bonds;
-  $("#goalCompanies").textContent = progress.companies;
+  $("#goalRaised").textContent = money(raised);
+  $("#goalRemaining").textContent = remaining ? `Faltan ${money(remaining)}` : "Meta cumplida";
+  $("#goalPercent").textContent = `${percent}%`;
+  $("#goalDonations").textContent = Number(progress.donations || 0);
+  $("#goalBonds").textContent = Number(progress.bonds || 0);
+  $("#goalCompanies").textContent = Number(progress.companies || 0);
   requestAnimationFrame(() => {
-    fill.style.width = `${progress.percent}%`;
+    fill.style.width = `${percent}%`;
   });
-}
-
-function setupAdmin() {
-  const dialog = $("#adminDialog");
-  $("#adminOpen").addEventListener("click", () => dialog.showModal());
-  $$("[data-close]").forEach((button) =>
-    button.addEventListener("click", () => {
-      dialog.close();
-      $("#adminPassword").value = "";
-    }),
-  );
-  dialog.addEventListener("close", () => {
-    $("#adminLogin").hidden = false;
-    $("#adminPanel").hidden = true;
-    $("#adminPassword").value = "";
-  });
-  $("#adminEnter").addEventListener("click", () => {
-    if ($("#adminPassword").value !== PASSWORD) {
-      toast("Contraseña incorrecta.");
-      return;
-    }
-    $("#adminLogin").hidden = true;
-    $("#adminPanel").hidden = false;
-    renderAdmin();
-  });
-  $$("[data-export]").forEach((button) => {
-    button.addEventListener("click", () => exportCsv(button.dataset.export));
-  });
-}
-
-function renderAdmin() {
-  const data = getStore();
-  const target = $("#adminTables");
-  target.innerHTML = "";
-  [
-    ["donaciones", "Donaciones libres"],
-    ["bonos", "Bonos solidarios"],
-    ["empresas", "Empresas aliadas"],
-  ].forEach(([key, title]) => {
-    const records = data[key] || [];
-    const section = document.createElement("section");
-    section.innerHTML = `<h3>${title} (${records.length})</h3>`;
-    const wrap = document.createElement("div");
-    wrap.className = "table-wrap";
-    wrap.appendChild(buildTable(records));
-    section.appendChild(wrap);
-    target.appendChild(section);
-  });
-}
-
-function buildTable(records) {
-  const table = document.createElement("table");
-  if (!records.length) {
-    table.innerHTML = "<tbody><tr><td>No hay registros todavía.</td></tr></tbody>";
-    return table;
-  }
-  const keys = [...new Set(records.flatMap((record) => Object.keys(record)))].filter(
-    (key) => key !== "comprobante",
-  );
-  table.innerHTML = `<thead><tr>${keys.map((key) => `<th>${label(key)}</th>`).join("")}<th>Comprobante</th></tr></thead>`;
-  const body = document.createElement("tbody");
-  records.forEach((record, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = keys.map((key) => `<td>${escapeHtml(record[key] || "")}</td>`).join("");
-    const receipt = document.createElement("td");
-    if (record.comprobante?.dataUrl) {
-      const link = document.createElement("a");
-      link.href = record.comprobante.dataUrl;
-      link.download = record.comprobante.name || `comprobante-${index + 1}`;
-      link.textContent = record.comprobante.name || "Descargar";
-      receipt.appendChild(link);
-    } else {
-      receipt.textContent = "Sin archivo";
-    }
-    row.appendChild(receipt);
-    body.appendChild(row);
-  });
-  table.appendChild(body);
-  return table;
-}
-
-function exportCsv(kind) {
-  const records = getStore()[kind] || [];
-  if (!records.length) {
-    toast("No hay registros para exportar.");
-    return;
-  }
-  const keys = [...new Set(records.flatMap((record) => Object.keys(record)))].filter(
-    (key) => key !== "comprobante",
-  );
-  keys.push("comprobante_archivo");
-  const rows = [
-    keys.map(label),
-    ...records.map((record) =>
-      keys.map((key) =>
-        key === "comprobante_archivo" ? record.comprobante?.name || "" : record[key] || "",
-      ),
-    ),
-  ];
-  const csv = rows.map((row) => row.map(csvCell).join(",")).join("\n");
-  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `el-legado-${kind}.csv`;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
-function label(key) {
-  return key
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase())
-    .replace("Whatsapp", "WhatsApp");
-}
-
-function csvCell(value) {
-  return `"${String(value).replaceAll('"', '""')}"`;
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
 }
 
 setupTabs();
 setupForms();
-setupAdmin();
-updateGoalProgress();
-window.addEventListener("storage", (event) => {
-  if (event.key === storeKey) updateGoalProgress();
-});
+loadGoalProgress();
+window.setInterval(loadGoalProgress, 60000);

@@ -13,7 +13,6 @@
   <body>
     <header class="topbar">
       <a class="brand" href="#inicio"><span>El Legado</span><small>Colegio Portugal</small></a>
-      <button class="ghost-button" id="adminOpen" type="button">Admin</button>
     </header>
 
     <main id="inicio">
@@ -275,27 +274,6 @@
         <a class="button light" href="#ayudar">Quiero participar</a>
       </section>
     </main>
-
-    <dialog id="adminDialog" class="admin-dialog">
-      <div class="admin-login" id="adminLogin">
-        <button class="close" type="button" data-close>&times;</button>
-        <h2>Panel privado</h2>
-        <p>Ingresa la contraseña para revisar registros y exportar datos.</p>
-        <label>Contraseña<input id="adminPassword" type="password" /></label>
-        <button class="button primary" id="adminEnter" type="button">Entrar</button>
-      </div>
-      <div class="admin-panel" id="adminPanel" hidden>
-        <button class="close" type="button" data-close>&times;</button>
-        <h2>Registros</h2>
-        <p class="admin-note">Versión local de prueba. Al publicar, estos registros deben conectarse a almacenamiento privado.</p>
-        <div class="admin-actions">
-          <button class="button green" data-export="donaciones">Exportar donaciones CSV</button>
-          <button class="button green" data-export="bonos">Exportar bonos CSV</button>
-          <button class="button green" data-export="empresas">Exportar empresas CSV</button>
-        </div>
-        <div id="adminTables"></div>
-      </div>
-    </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="app.js"></script>
