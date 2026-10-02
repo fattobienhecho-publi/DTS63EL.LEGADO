@@ -1025,6 +1025,7 @@ label {
 }
 
 input,
+select,
 textarea {
   width: 100%;
   min-height: 48px;
@@ -1034,6 +1035,13 @@ textarea {
   color: var(--ink);
   background: var(--white);
   font: inherit;
+}
+
+label.is-optional::after {
+  content: "Opcional mientras el pago esté pendiente";
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 textarea {

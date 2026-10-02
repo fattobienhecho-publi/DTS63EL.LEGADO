@@ -88,6 +88,17 @@ function setupForms() {
     });
   });
 
+  const bondPaymentState = $("#bono select[name='estadoPago']");
+  const bondReceipt = $("#bono input[name='comprobante']");
+  function syncBondReceiptRequirement() {
+    if (!bondPaymentState || !bondReceipt) return;
+    const isPending = bondPaymentState.value === "Pendiente de pago";
+    bondReceipt.required = !isPending;
+    bondReceipt.closest("label")?.classList.toggle("is-optional", isPending);
+  }
+  bondPaymentState?.addEventListener("change", syncBondReceiptRequirement);
+  syncBondReceiptRequirement();
+
   $$("form[data-kind]").forEach((form) => {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -103,9 +114,15 @@ function setupForms() {
         }
 
         const record = normalizeForm(form);
-        if (kind === "bonos" && !/^\d{4}$/.test(record.numero || "")) {
-          toast("El número del bono debe tener exactamente 4 cifras.");
-          return;
+        if (kind === "bonos") {
+          if (!/^\d{4}$/.test(record.numero1 || "") || !/^\d{4}$/.test(record.numero2 || "")) {
+            toast("Cada número del bono debe tener exactamente 4 cifras.");
+            return;
+          }
+          if (record.estadoPago !== "Pendiente de pago" && !$("input[type='file']", form)?.files?.[0]) {
+            toast("Si el bono ya se pagó, debes subir el comprobante.");
+            return;
+          }
         }
 
         const file = $("input[type='file']", form)?.files?.[0];
@@ -118,6 +135,7 @@ function setupForms() {
         await wait(2600);
         const confirmed = await refreshProgressAfterSubmit(kind, before);
         form.reset();
+        if (kind === "bonos") syncBondReceiptRequirement();
         toast(confirmed ? "Registro confirmado. La meta ya se actualizó." : "Registro enviado, pero aún no aparece en la meta. Revisa el Google Sheet o el Apps Script.");
       } catch (error) {
         const message =
@@ -259,7 +277,8 @@ async function generateBondImage(record) {
   const nombre = String(record.nombre || "").trim();
   const cedula = String(record.cedula || "").trim();
   const whatsapp = String(record.whatsapp || "").trim();
-  const numero = String(record.numero || "").replace(/[^\d]/g, "").padStart(4, "0").slice(-4);
+  const numero1 = String(record.numero1 || record.numero || "").replace(/[^\d]/g, "").padStart(4, "0").slice(-4);
+  const numero2 = String(record.numero2 || "").replace(/[^\d]/g, "").padStart(4, "0").slice(-4);
 
   fitFont(ctx, nombre, 270, 24);
   ctx.fillText(nombre, 444, 1258);
@@ -272,9 +291,9 @@ async function generateBondImage(record) {
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#e3002c";
-  ctx.font = "900 82px Arial";
-  ctx.fillText(numero.slice(0, 2), 453, 1460);
-  ctx.fillText(numero.slice(2), 628, 1460);
+  ctx.font = "900 56px Arial";
+  ctx.fillText(numero1, 453, 1452);
+  ctx.fillText(numero2, 628, 1452);
   ctx.textAlign = "start";
 
   return canvas.toDataURL("image/png");
@@ -289,7 +308,7 @@ async function showBondPreview(record) {
   const dataUrl = await generateBondImage(record);
   image.src = dataUrl;
   download.href = dataUrl;
-  download.download = `bono-solidario-${cleanFilePart(record.numero)}-${cleanFilePart(record.nombre)}.png`;
+  download.download = `bono-solidario-${cleanFilePart(record.numero1)}-${cleanFilePart(record.numero2)}-${cleanFilePart(record.nombre)}.png`;
   preview.hidden = false;
   preview.scrollIntoView({ behavior: "smooth", block: "center" });
 }

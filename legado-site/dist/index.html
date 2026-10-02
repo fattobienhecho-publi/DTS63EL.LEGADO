@@ -145,13 +145,85 @@
         </div>
 
         <div class="tabs" role="tablist" aria-label="Formas de ayudar">
-          <button class="tab active" type="button" data-tab="donacion">Donar</button>
-          <button class="tab" type="button" data-tab="bono">Bono</button>
+          <button class="tab active" type="button" data-tab="bono">Bono</button>
+          <button class="tab" type="button" data-tab="donacion">Donar</button>
           <button class="tab" type="button" data-tab="empresa">Empresa</button>
         </div>
 
         <div class="forms-shell">
-          <section class="form-panel active" id="donacion">
+          <section class="form-panel active" id="bono">
+            <div class="pay-box">
+              <h3>Bono solidario</h3>
+              <div class="price-card">
+                <span>Valor del bono</span>
+                <strong>$50.000</strong>
+              </div>
+              <p>
+                Con tu bono ayudas al Colegio Portugal y participas con dos números de 4 cifras:
+                dos oportunidades para ganar con la Lotería de Boyacá.
+              </p>
+              <h4>Premios del bono</h4>
+              <div class="prize-cards">
+                <article>
+                  <span>Premio mayor · 31 de octubre</span>
+                  <strong>Viaje a San Andrés</strong>
+                  <p>4 días y 3 noches para 2 personas, todo incluido.</p>
+                </article>
+                <article>
+                  <span>1er premio · 17 de octubre</span>
+                  <strong>Noche romántica</strong>
+                  <p>Cena y experiencia para 2 personas.</p>
+                </article>
+                <article>
+                  <span>2do premio · 24 de octubre</span>
+                  <strong>Spa para 2 personas</strong>
+                  <p>Un espacio para relajarse y disfrutar.</p>
+                </article>
+              </div>
+              <h4>Cómo participar</h4>
+              <ol class="steps">
+                <li>Elige tus dos números de 4 cifras.</li>
+                <li>Realiza el pago del bono con el QR o la llave Bre-B.</li>
+                <li>Si queda pendiente, registra el bono y envía el comprobante después.</li>
+              </ol>
+              <div class="payment-card">
+                <img src="assets/qr-bre-b-bancolombia.jpeg" alt="QR Bre-B Bancolombia para comprar el bono solidario" />
+                <div class="payment-details">
+                  <span>Pago por Bre-B Bancolombia</span>
+                  <strong>Llave: @pineda3041</strong>
+                  <p>Oscar Steven Pineda Reina · CC 1098813041</p>
+                </div>
+              </div>
+              <p class="small-note">Boleta sin cancelar no juega.</p>
+            </div>
+            <form data-kind="bonos">
+              <label>Nombre<input name="nombre" required autocomplete="name" /></label>
+              <label>Cédula<input name="cedula" required inputmode="numeric" /></label>
+              <label>WhatsApp<input name="whatsapp" required inputmode="tel" /></label>
+              <label>¿Quién te vendió el bono?<input name="vendedor" required placeholder="Nombre de la persona que te refirió" /></label>
+              <label>Estado de pago
+                <select name="estadoPago" required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="Pagado">Ya se pagó</option>
+                  <option value="Pendiente de pago">Pendiente de pago</option>
+                </select>
+              </label>
+              <label>Número 1 de 4 cifras<input name="numero1" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" /></label>
+              <label>Número 2 de 4 cifras<input name="numero2" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" /></label>
+              <label>Comprobante<input name="comprobante" type="file" accept="image/*,.pdf" /></label>
+              <button class="button primary" type="submit">Comprar bono</button>
+            </form>
+            <div class="bond-preview" id="bondPreview" hidden>
+              <div>
+                <h3>Tu bono solidario</h3>
+                <p>Esta es la vista previa con los números elegidos.</p>
+              </div>
+              <img id="bondPreviewImage" alt="Bono solidario generado con los números elegidos" />
+              <a class="button green" id="bondDownload" download="bono-solidario.png">Descargar bono</a>
+            </div>
+          </section>
+
+          <section class="form-panel" id="donacion">
             <div class="pay-box">
               <h3>Aporte libre</h3>
               <p>
@@ -187,70 +259,6 @@
               <label>Mensaje opcional<textarea name="mensaje" rows="3"></textarea></label>
               <button class="button primary" type="submit">Enviar aporte</button>
             </form>
-          </section>
-
-          <section class="form-panel" id="bono">
-            <div class="pay-box">
-              <h3>Bono solidario</h3>
-              <div class="price-card">
-                <span>Valor del bono</span>
-                <strong>$50.000</strong>
-              </div>
-              <p>
-                Con tu bono ayudas al Colegio Portugal y participas con un número de 4 cifras en
-                los sorteos de la Lotería de Boyacá.
-              </p>
-              <h4>Premios del bono</h4>
-              <div class="prize-cards">
-                <article>
-                  <span>Premio mayor · 31 de octubre</span>
-                  <strong>Viaje a San Andrés</strong>
-                  <p>4 días y 3 noches para 2 personas, todo incluido.</p>
-                </article>
-                <article>
-                  <span>1er premio · 17 de octubre</span>
-                  <strong>Noche romántica</strong>
-                  <p>Cena y experiencia para 2 personas.</p>
-                </article>
-                <article>
-                  <span>2do premio · 24 de octubre</span>
-                  <strong>Spa para 2 personas</strong>
-                  <p>Un espacio para relajarse y disfrutar.</p>
-                </article>
-              </div>
-              <h4>Cómo participar</h4>
-              <ol class="steps">
-                <li>Elige tu número de 4 cifras.</li>
-                <li>Realiza el pago del bono con el QR o la llave Bre-B.</li>
-                <li>Sube el comprobante para registrar tu participación.</li>
-              </ol>
-              <div class="payment-card">
-                <img src="assets/qr-bre-b-bancolombia.jpeg" alt="QR Bre-B Bancolombia para comprar el bono solidario" />
-                <div class="payment-details">
-                  <span>Pago por Bre-B Bancolombia</span>
-                  <strong>Llave: @pineda3041</strong>
-                  <p>Oscar Steven Pineda Reina · CC 1098813041</p>
-                </div>
-              </div>
-              <p class="small-note">Boleta sin cancelar no juega.</p>
-            </div>
-            <form data-kind="bonos">
-              <label>Nombre<input name="nombre" required autocomplete="name" /></label>
-              <label>Cédula<input name="cedula" required inputmode="numeric" /></label>
-              <label>WhatsApp<input name="whatsapp" required inputmode="tel" /></label>
-              <label>¿Quién te vendió el bono?<input name="vendedor" placeholder="Nombre de la persona que te refirió" /></label>
-              <label>Número de 4 cifras<input name="numero" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="0000" /></label>
-              <label>Comprobante<input name="comprobante" type="file" accept="image/*,.pdf" required /></label>
-              <button class="button primary" type="submit">Comprar bono</button>
-            </form>
-            <div class="bond-preview" id="bondPreview" hidden>
-              <div>
-                <h3>Tu bono solidario</h3>
-                <p>Esta es la vista previa con el número elegido.</p>
-              </div>
-              <img id="bondPreviewImage" alt="Bono solidario generado con el número elegido" />
-              <a class="button green" id="bondDownload" download="bono-solidario.png">Descargar bono</a>
-            </div>
           </section>
 
           <section class="form-panel" id="empresa">
@@ -355,6 +363,6 @@
       <button class="media-close" type="button" aria-label="Cerrar vista ampliada">Cerrar</button>
       <div class="media-modal-body" id="mediaModalBody"></div>
     </div>
-    <script src="app.js?v=20261001-4"></script>
+    <script src="app.js?v=20261002-1"></script>
   </body>
 </html>

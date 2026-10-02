@@ -10,7 +10,7 @@ const SHEETS = {
   },
   bonos: {
     name: "Bonos",
-    headers: ["Fecha", "Nombre", "Cedula", "WhatsApp", "Vendedor", "Numero", "Comprobante"],
+    headers: ["Fecha", "Nombre", "Cedula", "WhatsApp", "Vendedor", "Estado de pago", "Numero 1", "Numero 2", "Comprobante"],
   },
   empresas: {
     name: "Empresas",
@@ -68,7 +68,9 @@ function appendRecord(kind, record, receiptUrl) {
       record.cedula || "",
       record.whatsapp || "",
       record.vendedor || "",
-      record.numero || "",
+      record.estadoPago || "",
+      record.numero1 || record.numero || "",
+      record.numero2 || "",
       receiptUrl || "",
     ]);
     return;
@@ -92,9 +94,10 @@ function getSummary() {
 
   const donationRows = getRows(donationSheet);
   const donationTotal = donationRows.reduce((sum, row) => sum + parseMoney(row[3]), 0);
-  const bonds = getRows(bondSheet).length;
+  const bondRows = getRows(bondSheet);
+  const paidBonds = bondRows.filter((row) => String(row[5] || "Pagado").toLowerCase() !== "pendiente de pago").length;
   const companies = getRows(companySheet).length;
-  const raised = donationTotal + bonds * BOND_AMOUNT;
+  const raised = donationTotal + paidBonds * BOND_AMOUNT;
   const remaining = Math.max(GOAL_AMOUNT - raised, 0);
   const percent = Math.min(100, Math.round((raised / GOAL_AMOUNT) * 100));
 
@@ -103,7 +106,7 @@ function getSummary() {
     remaining,
     percent,
     donations: donationRows.length,
-    bonds,
+    bonds: paidBonds,
     companies,
   };
 }
