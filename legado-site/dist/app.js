@@ -133,10 +133,10 @@ function setupForms() {
           await showBondPreview(record);
         }
         await wait(2600);
-        const confirmed = await refreshProgressAfterSubmit(kind, before);
+        const confirmed = await refreshProgressAfterSubmit(kind, before, record);
         form.reset();
         if (kind === "bonos") syncBondReceiptRequirement();
-        toast(confirmed ? "Registro confirmado. La meta ya se actualizó." : "Registro enviado, pero aún no aparece en la meta. Revisa el Google Sheet o el Apps Script.");
+        toast(getSubmitConfirmationMessage(kind, record, confirmed));
       } catch (error) {
         const message =
           error.message === "receipt-too-large"
@@ -326,12 +326,30 @@ function sendToSheet(payload) {
   });
 }
 
-async function refreshProgressAfterSubmit(kind, before) {
+function getSubmitConfirmationMessage(kind, record, confirmed) {
+  if (kind === "bonos" && record.estadoPago === "Pendiente de pago") {
+    return confirmed
+      ? "Bono registrado como pendiente. Cuando se pague, sumará a la meta."
+      : "Registro enviado como pendiente, pero aún no se pudo confirmar en la hoja.";
+  }
+  return confirmed
+    ? "Registro confirmado. La meta ya se actualizó."
+    : "Registro enviado, pero aún no aparece en la meta. Revisa el Google Sheet o el Apps Script.";
+}
+
+async function refreshProgressAfterSubmit(kind, before, record = {}) {
   try {
     const progress = await loadSummaryFromSheet();
     updateGoalProgress(progress || fallbackProgress());
     if (!before || !progress) return true;
-    if (kind === "bonos") return Number(progress.bonds || 0) > Number(before.bonds || 0);
+    if (kind === "bonos") {
+      if (record.estadoPago === "Pendiente de pago") {
+        const previousTotal = Number(before.totalBonds ?? before.bonds ?? 0);
+        const currentTotal = Number(progress.totalBonds ?? progress.bonds ?? 0);
+        return currentTotal > previousTotal;
+      }
+      return Number(progress.bonds || 0) > Number(before.bonds || 0);
+    }
     if (kind === "donaciones") return Number(progress.raised || 0) > Number(before.raised || 0);
     if (kind === "empresas") return Number(progress.companies || 0) > Number(before.companies || 0);
     return true;

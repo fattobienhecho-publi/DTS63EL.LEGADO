@@ -96,6 +96,7 @@ function getSummary() {
   const donationTotal = donationRows.reduce((sum, row) => sum + parseMoney(row[3]), 0);
   const bondRows = getRows(bondSheet);
   const paidBonds = bondRows.filter((row) => String(row[5] || "Pagado").toLowerCase() !== "pendiente de pago").length;
+  const pendingBonds = bondRows.length - paidBonds;
   const companies = getRows(companySheet).length;
   const raised = donationTotal + paidBonds * BOND_AMOUNT;
   const remaining = Math.max(GOAL_AMOUNT - raised, 0);
@@ -107,6 +108,8 @@ function getSummary() {
     percent,
     donations: donationRows.length,
     bonds: paidBonds,
+    totalBonds: bondRows.length,
+    pendingBonds,
     companies,
   };
 }
