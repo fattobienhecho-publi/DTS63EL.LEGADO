@@ -397,6 +397,7 @@ h3 {
 .section-heading,
 .plan,
 .trust,
+.team-video,
 .evidence {
   max-width: 1080px;
   margin: 0 auto;
@@ -517,6 +518,35 @@ h3 {
   display: grid;
   gap: 22px;
   align-items: center;
+}
+
+.team-video {
+  display: grid;
+  gap: 22px;
+  align-items: center;
+}
+
+.story-team-video {
+  margin-top: 32px;
+}
+
+.team-video p {
+  max-width: 620px;
+  color: var(--muted);
+}
+
+.team-video-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.team-video-card video {
+  width: min(100%, 420px);
+  aspect-ratio: 9 / 16;
+  border-radius: 20px;
+  background: var(--blue);
+  box-shadow: var(--shadow);
 }
 
 .evidence p {
@@ -1189,6 +1219,10 @@ th {
 
   .evidence {
     grid-template-columns: 0.82fr 1.18fr;
+  }
+
+  .team-video {
+    grid-template-columns: 0.95fr 1.05fr;
   }
 
   .evidence-media {

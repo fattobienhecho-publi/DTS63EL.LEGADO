@@ -254,6 +254,11 @@ function fitFont(ctx, text, maxWidth, startSize, family = "Arial") {
   } while (ctx.measureText(text).width > maxWidth && size > 16);
 }
 
+function drawBondNumber(ctx, number, x, y) {
+  fitFont(ctx, number, 122, 66);
+  ctx.fillText(number, x, y);
+}
+
 function cleanFilePart(value) {
   return String(value || "bono")
     .normalize("NFD")
@@ -291,9 +296,8 @@ async function generateBondImage(record) {
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#e3002c";
-  ctx.font = "900 56px Arial";
-  ctx.fillText(numero1, 453, 1452);
-  ctx.fillText(numero2, 628, 1452);
+  drawBondNumber(ctx, numero1, 453, 1454);
+  drawBondNumber(ctx, numero2, 628, 1454);
   ctx.textAlign = "start";
 
   return canvas.toDataURL("image/png");
