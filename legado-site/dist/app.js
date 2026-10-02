@@ -3,6 +3,7 @@ const bondTemplateSrc = "assets/bono-solidario-template.png";
 const goalAmount = 30000000;
 const maxReceiptSize = 4 * 1024 * 1024;
 let latestProgress = null;
+let bondTemplatePromise = null;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -123,15 +124,15 @@ function setupForms() {
             toast("Si el bono ya se pagó, debes subir el comprobante.");
             return;
           }
+          submit.textContent = "Generando bono...";
+          await showBondPreview(record);
         }
 
         const file = $("input[type='file']", form)?.files?.[0];
+        submit.textContent = "Enviando...";
         const comprobante = await fileToRecord(file);
         const before = latestProgress;
         await sendToSheet({ kind, record, comprobante });
-        if (kind === "bonos") {
-          await showBondPreview(record);
-        }
         await wait(2600);
         const confirmed = await refreshProgressAfterSubmit(kind, before, record);
         form.reset();
@@ -149,6 +150,8 @@ function setupForms() {
       }
     });
   });
+
+  getBondTemplate().catch(() => {});
 }
 
 function setupStoryCarousel() {
@@ -246,6 +249,11 @@ function loadImage(src) {
   });
 }
 
+function getBondTemplate() {
+  if (!bondTemplatePromise) bondTemplatePromise = loadImage(bondTemplateSrc);
+  return bondTemplatePromise;
+}
+
 function fitFont(ctx, text, maxWidth, startSize, family = "Arial") {
   let size = startSize;
   do {
@@ -269,7 +277,7 @@ function cleanFilePart(value) {
 }
 
 async function generateBondImage(record) {
-  const template = await loadImage(bondTemplateSrc);
+  const template = await getBondTemplate();
   const canvas = document.createElement("canvas");
   canvas.width = template.naturalWidth || template.width;
   canvas.height = template.naturalHeight || template.height;
