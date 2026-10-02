@@ -124,6 +124,8 @@ function ensureSheet(kind) {
   let sheet = spreadsheet.getSheetByName(config.name);
   if (!sheet) sheet = spreadsheet.insertSheet(config.name);
 
+  if (kind === "bonos") migrateBondSheet(sheet, config.headers);
+
   const range = sheet.getRange(1, 1, 1, config.headers.length);
   const current = range.getValues()[0];
   const hasExpectedHeaders = config.headers.every((header, index) => current[index] === header);
@@ -131,6 +133,35 @@ function ensureSheet(kind) {
   range.setFontWeight("bold");
   sheet.setFrozenRows(1);
   return sheet;
+}
+
+function migrateBondSheet(sheet, headers) {
+  const lastRow = sheet.getLastRow();
+  const lastColumn = Math.max(sheet.getLastColumn(), headers.length);
+  if (lastRow < 1) return;
+
+  const currentHeaders = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+  const alreadyMigrated = headers.every((header, index) => currentHeaders[index] === header);
+  const oldNumberIndex = currentHeaders.indexOf("Numero");
+  if (alreadyMigrated || oldNumberIndex === -1) return;
+
+  const rows = lastRow > 1 ? sheet.getRange(2, 1, lastRow - 1, lastColumn).getValues() : [];
+  const migrated = rows.map((row) => [
+    row[0] || "",
+    row[1] || "",
+    row[2] || "",
+    row[3] || "",
+    row[4] || "",
+    "Pagado",
+    row[oldNumberIndex] || "",
+    "",
+    row[oldNumberIndex + 1] || "",
+  ]);
+
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  if (migrated.length) {
+    sheet.getRange(2, 1, migrated.length, headers.length).setValues(migrated);
+  }
 }
 
 function saveReceipt(file) {
