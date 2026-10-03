@@ -4,6 +4,7 @@ const goalAmount = 30000000;
 const maxReceiptSize = 4 * 1024 * 1024;
 let latestProgress = null;
 let bondTemplatePromise = null;
+let bondImageUrl = null;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -319,19 +320,32 @@ async function generateBondImage(record) {
   drawBondNumber(ctx, numero2, 628, 1454);
   ctx.textAlign = "start";
 
-  return canvas.toDataURL("image/png");
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error("bond-blob-failed"));
+        return;
+      }
+      resolve(blob);
+    }, "image/png");
+  });
 }
 
 async function showBondPreview(record) {
   const preview = $("#bondPreview");
   const image = $("#bondPreviewImage");
   const download = $("#bondDownload");
-  if (!preview || !image || !download) return;
+  const open = $("#bondOpen");
+  if (!preview || !image || !download || !open) return;
 
-  const dataUrl = await generateBondImage(record);
-  image.src = dataUrl;
-  download.href = dataUrl;
-  download.download = `bono-solidario-${cleanFilePart(record.numero1)}-${cleanFilePart(record.numero2)}-${cleanFilePart(record.nombre)}.png`;
+  const blob = await generateBondImage(record);
+  if (bondImageUrl) URL.revokeObjectURL(bondImageUrl);
+  bondImageUrl = URL.createObjectURL(blob);
+  const fileName = `bono-solidario-${cleanFilePart(record.numero1)}-${cleanFilePart(record.numero2)}-${cleanFilePart(record.nombre)}.png`;
+  image.src = bondImageUrl;
+  download.href = bondImageUrl;
+  download.download = fileName;
+  open.href = bondImageUrl;
   preview.hidden = false;
   preview.scrollIntoView({ behavior: "smooth", block: "center" });
 }

@@ -9,7 +9,7 @@
       content="Campaña ciudadana para mejorar el Colegio Portugal en San Nicolás Alto, Lebrija."
     />
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20261001-1" />
-    <link rel="stylesheet" href="styles.css?v=20261002-2" />
+    <link rel="stylesheet" href="styles.css?v=20261003-2" />
   </head>
   <body>
     <header class="topbar">
@@ -233,7 +233,11 @@
                 <p>Esta es la vista previa con los números elegidos.</p>
               </div>
               <img id="bondPreviewImage" alt="Bono solidario generado con los números elegidos" />
-              <a class="button green" id="bondDownload" download="bono-solidario.png">Descargar bono</a>
+              <div class="bond-actions">
+                <a class="button green" id="bondDownload" download="bono-solidario.png">Descargar bono</a>
+                <a class="button secondary" id="bondOpen" target="_blank" rel="noopener">Abrir imagen</a>
+              </div>
+              <p class="small-note">En celular, si no descarga directo, abre la imagen y mantenla presionada para guardarla.</p>
             </div>
           </section>
 
@@ -377,6 +381,6 @@
       <button class="media-close" type="button" aria-label="Cerrar vista ampliada">Cerrar</button>
       <div class="media-modal-body" id="mediaModalBody"></div>
     </div>
-    <script src="app.js?v=20261003-1"></script>
+    <script src="app.js?v=20261003-2"></script>
   </body>
 </html>
