@@ -31,6 +31,10 @@ function wait(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
+function nextFrame() {
+  return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+}
+
 function fileToRecord(file) {
   if (!file) return Promise.resolve(null);
   if (file.size > maxReceiptSize) {
@@ -125,7 +129,14 @@ function setupForms() {
             return;
           }
           submit.textContent = "Generando bono...";
-          await showBondPreview(record);
+          try {
+            await showBondPreview(record);
+            await nextFrame();
+            await wait(120);
+          } catch {
+            toast("No se pudo generar la imagen del bono. Inténtalo de nuevo.");
+            return;
+          }
         }
 
         const file = $("input[type='file']", form)?.files?.[0];
