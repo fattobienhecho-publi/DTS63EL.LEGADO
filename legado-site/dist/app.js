@@ -397,10 +397,11 @@ function loadSummaryFromSheet() {
   return new Promise((resolve, reject) => {
     const callback = `elLegadoSummary${Date.now()}`;
     const script = document.createElement("script");
+    let timedOut = false;
     const timer = window.setTimeout(() => {
-      cleanup();
+      timedOut = true;
       reject(new Error("summary-timeout"));
-    }, 8000);
+    }, 30000);
 
     function cleanup() {
       window.clearTimeout(timer);
@@ -409,6 +410,11 @@ function loadSummaryFromSheet() {
     }
 
     window[callback] = (data) => {
+      if (timedOut) {
+        updateGoalProgress(data || fallbackProgress());
+        cleanup();
+        return;
+      }
       cleanup();
       resolve(data);
     };
